@@ -1,0 +1,17 @@
+---
+interface Props {
+  name1: string;
+  name2: string;
+}
+
+const { name1, name2 } = Astro.props;
+---
+
+<section class="text-center my-10 md:my-14 px-4 w-full">
+  <h1 class="font-script text-6xl md:text-8xl text-primary text-shadow-elegant my-4 transform -rotate-2">
+    {name1} &amp; {name2}
+  </h1>
+  <div class="flex justify-center items-center gap-6 mt-6">
+    <div class="h-px w-24 md:w-36 bg-primary-container"></div>
+  </div>
+</section>

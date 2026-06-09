@@ -1,0 +1,13 @@
+---
+interface Props {
+  text?: string;
+}
+
+const { text } = Astro.props;
+---
+
+<section class="px-8 md:px-16 text-center mb-10 md:mb-14">
+  <p class="font-body-md text-on-surface-variant max-w-[280px] md:max-w-md mx-auto leading-relaxed md:text-lg">
+    {text ?? 'Estamos inmensamente felices de comenzar una nueva etapa de la mano de Dios, y queremos dar este gran paso junto a las personas que han sido parte de nuestra historia y de nuestro caminar. Por eso, nos encantaría contar con tu presencia y compañía en un día tan especial para nosotros, porque compartir este momento con vos lo haría aún más hermoso e inolvidable.'}
+  </p>
+</section>

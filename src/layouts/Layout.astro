@@ -1,0 +1,48 @@
+---
+import SplashScreen from '../components/SplashScreen.astro';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Mauro & Barbi - Wedding Invitation' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Dancing+Script:wght@400;700&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-surface text-on-surface antialiased font-body-md overflow-x-hidden min-h-screen flex flex-col">
+    <SplashScreen />
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  .torn-edge {
+    mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0 L1200,0 L1200,80 Q1150,100 1100,60 T1000,80 T900,40 T800,90 T700,50 T600,80 T500,40 T400,90 T300,50 T200,80 T100,40 T0,70 Z" fill="black"/></svg>');
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-position: bottom;
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0 L1200,0 L1200,80 Q1150,100 1100,60 T1000,80 T900,40 T800,90 T700,50 T600,80 T500,40 T400,90 T300,50 T200,80 T100,40 T0,70 Z" fill="black"/></svg>');
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: bottom;
+    padding-bottom: 2rem;
+  }
+
+  .text-shadow-elegant {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+  }
+</style>

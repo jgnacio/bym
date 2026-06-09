@@ -1,0 +1,361 @@
+---
+---
+
+<div id="splash-screen">
+  <!-- Video overlay: top-left corner (alternates between two clips) -->
+  <div class="video-overlay-wrap" aria-hidden="true">
+    <video id="overlay-a" class="overlay-vid" autoplay muted playsinline>
+      <source src="/overlay1.MP4" type="video/mp4" />
+    </video>
+    <video id="overlay-b" class="overlay-vid overlay-vid--hidden" muted playsinline>
+      <source src="/overlay2.MP4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- Video overlay: bottom-right corner -->
+  <div class="video-overlay-wrap video-overlay-wrap--br" aria-hidden="true">
+    <video id="overlay-c" class="overlay-vid" autoplay muted playsinline>
+      <source src="/overlay3.mp4" type="video/mp4" />
+    </video>
+    <video id="overlay-d" class="overlay-vid overlay-vid--hidden" muted playsinline>
+      <source src="/overlay4.MP4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- Flower: top-right (dark branch) -->
+  <img src="/flower-bottom-left.webp" alt="" aria-hidden="true" class="flower flower-tr" />
+
+  <!-- Flower: bottom-left (pink cherry blossoms) -->
+  <img src="/flower-top-right.png" alt="" aria-hidden="true" class="flower flower-bl" />
+
+  <!-- Compass: optically centered -->
+  <div class="medallion-wrap">
+    <svg viewBox="0 0 320 320" class="medallion-svg" aria-hidden="true" style="opacity: 0.07;">
+      <circle cx="160" cy="160" r="140" fill="none" stroke="#556345" stroke-width="1.2" class="ring-outer" />
+      <circle cx="160" cy="160" r="123" fill="none" stroke="#556345" stroke-width="0.6" class="ring-inner" />
+
+      <g class="ticks" stroke="#556345">
+        <line x1="160" y1="20" x2="160" y2="32" stroke-width="1.5" />
+        <line x1="160" y1="20" x2="160" y2="32" stroke-width="1.5" transform="rotate(90,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="32" stroke-width="1.5" transform="rotate(180,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="32" stroke-width="1.5" transform="rotate(270,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="27" stroke-width="0.8" transform="rotate(45,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="27" stroke-width="0.8" transform="rotate(135,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="27" stroke-width="0.8" transform="rotate(225,160,160)" />
+        <line x1="160" y1="20" x2="160" y2="27" stroke-width="0.8" transform="rotate(315,160,160)" />
+      </g>
+
+      <g class="flourishes" fill="none" stroke="#7c5357" stroke-width="1" stroke-linecap="round">
+        <path d="M 152,18 C 155,6 165,6 168,18" />
+        <path d="M 152,18 C 155,6 165,6 168,18" transform="rotate(90,160,160)" />
+        <path d="M 152,18 C 155,6 165,6 168,18" transform="rotate(180,160,160)" />
+        <path d="M 152,18 C 155,6 165,6 168,18" transform="rotate(270,160,160)" />
+      </g>
+
+      <g class="petals" fill="rgba(124,83,87,0.12)" stroke="#7c5357" stroke-width="0.6">
+        <ellipse cx="160" cy="8"   rx="5" ry="8" />
+        <ellipse cx="312" cy="160" rx="8" ry="5" />
+        <ellipse cx="160" cy="312" rx="5" ry="8" />
+        <ellipse cx="8"   cy="160" rx="8" ry="5" />
+      </g>
+    </svg>
+
+    <div class="names-overlay">
+      <span class="couple-name">Mauro &amp; Barbi</span>
+      <p class="splash-date">19 · 09 · 2026</p>
+      <button id="splash-cta" aria-label="Abrir invitación">
+        Abrir invitación
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Video crossfade ─────────────────────────────────────────
+  const FADE = 800;
+
+  function crossfadeTo(incoming: HTMLVideoElement, outgoing: HTMLVideoElement) {
+    incoming.currentTime = 0;
+    incoming.play();
+    incoming.classList.remove('overlay-vid--hidden');
+    outgoing.classList.add('overlay-vid--hidden');
+    setTimeout(() => outgoing.pause(), FADE + 50);
+  }
+
+  const vidA = document.getElementById('overlay-a') as HTMLVideoElement | null;
+  const vidB = document.getElementById('overlay-b') as HTMLVideoElement | null;
+
+  if (vidA && vidB) {
+    vidA.addEventListener('ended', () => crossfadeTo(vidB, vidA));
+    vidB.addEventListener('ended', () => crossfadeTo(vidA, vidB));
+  }
+
+  // ── Bottom-right overlay: cycle between 2 videos ────────────
+  const vidC = document.getElementById('overlay-c') as HTMLVideoElement | null;
+  const vidD = document.getElementById('overlay-d') as HTMLVideoElement | null;
+
+  if (vidC && vidD) {
+    vidC.addEventListener('ended', () => crossfadeTo(vidD, vidC));
+
+    vidD.addEventListener('timeupdate', () => {
+      if (vidD.duration && vidD.currentTime >= vidD.duration - 4) {
+        crossfadeTo(vidC, vidD);
+      }
+    });
+  }
+
+  // ── Dismiss ─────────────────────────────────────────────────
+  const splash = document.getElementById('splash-screen');
+  const cta    = document.getElementById('splash-cta');
+
+  function dismissSplash() {
+    splash?.classList.add('splash-exit');
+    splash?.addEventListener('animationend', () => {
+      splash.style.display = 'none';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }, { once: true });
+  }
+
+  cta?.addEventListener('click', dismissSplash);
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+</script>
+
+<style>
+  /* ─── Container ───────────────────────────────── */
+  #splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: #faf9f5;
+    overflow: hidden;
+  }
+
+
+  /* ─── Medallion: optically centered ──────────── */
+  .medallion-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    height: 520px;
+  }
+
+  .medallion-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+
+  /* ─── SVG ring animations (delayed after grid ~0.85s) ── */
+  .ring-outer {
+    stroke-dasharray: 880;
+    stroke-dashoffset: 880;
+    animation: drawRing 2s 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .ring-inner {
+    stroke-dasharray: 773;
+    stroke-dashoffset: 773;
+    animation: drawRing 2s 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .ticks {
+    opacity: 0;
+    animation: fadeIn 0.6s 1.4s ease forwards;
+  }
+
+  .flourishes {
+    opacity: 0;
+    animation: fadeIn 0.8s 1.7s ease forwards;
+  }
+
+  .petals {
+    opacity: 0;
+    animation: fadeIn 0.8s 1.9s ease forwards;
+  }
+
+
+  @keyframes drawRing {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* ─── Names ───────────────────────────────────── */
+  .names-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .couple-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700;
+    color: #556345;
+    opacity: 0;
+    transform: rotate(-2deg) translateY(8px);
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+    animation: fadeInUpRotated 0.8s 2.1s ease forwards;
+  }
+
+  @keyframes fadeInUpRotated {
+    to { opacity: 1; transform: rotate(-2deg) translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Date ────────────────────────────────────── */
+  .splash-date {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: #556345;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeInUp 0.7s 2.8s ease forwards;
+  }
+
+  /* ─── CTA ─────────────────────────────────────── */
+  #splash-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.65rem 1.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: #556345;
+    background: #ffffff;
+    border: 1px solid #556345;
+    border-radius: 9999px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeInUp 0.7s 3.1s ease forwards;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  #splash-cta:hover {
+    background-color: #556345;
+    color: #ffffff;
+  }
+
+  /* ─── Flowers (start with compass) ───────────── */
+  .flower {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+    animation: fadeIn 1.4s 0.85s ease forwards;
+  }
+
+  .flower-tr {
+    top: -15%;
+    right: -5%;
+    width: clamp(320px, 42vw, 580px);
+    -webkit-mask-image: radial-gradient(ellipse 95% 90% at 100% 0%, black 80%, transparent 98%);
+    mask-image: radial-gradient(ellipse 95% 90% at 100% 0%, black 80%, transparent 98%);
+  }
+
+  .flower-bl {
+    bottom: -6%;
+    left: -4%;
+    width: clamp(320px, 42vw, 580px);
+    -webkit-mask-image: radial-gradient(ellipse 90% 85% at 0% 100%, black 60%, transparent 90%);
+    mask-image: radial-gradient(ellipse 90% 85% at 0% 100%, black 60%, transparent 90%);
+  }
+
+  /* ─── Exit ────────────────────────────────────── */
+  .splash-exit {
+    animation: splashExit 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+
+  @keyframes splashExit {
+    0%   { opacity: 1; filter: blur(0px);   transform: scale(1); }
+    100% { opacity: 0; filter: blur(18px);  transform: scale(1.04); }
+  }
+
+  /* ─── Video overlay ──────────────────────────── */
+  .video-overlay-wrap {
+    position: absolute;
+    top: -5%;
+    left: -20%;
+    height: 72vh;
+    width: auto;
+    aspect-ratio: 16 / 9;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    filter: contrast(1.05);
+    opacity: 0;
+    animation: fadeIn 1.6s 2.1s ease forwards;
+    -webkit-mask-image: radial-gradient(ellipse 100% 95% at 0% 0%, black 65%, rgba(0,0,0,0.4) 85%, transparent 100%);
+    mask-image: radial-gradient(ellipse 100% 95% at 0% 0%, black 65%, rgba(0,0,0,0.4) 85%, transparent 100%);
+    overflow: hidden;
+  }
+
+  .overlay-vid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+  }
+
+  #overlay-b {
+    object-position: right center;
+  }
+
+  #overlay-c {
+    object-position: center 45%;
+  }
+
+  #overlay-d {
+    object-position: center 58%;
+  }
+
+
+  .overlay-vid--hidden {
+    opacity: 0;
+  }
+
+  /* ─── Video overlay bottom-right ─────────────── */
+  .video-overlay-wrap--br {
+    top: auto;
+    bottom: -5%;
+    left: auto;
+    right: -20%;
+    -webkit-mask-image: radial-gradient(ellipse 100% 95% at 100% 100%, black 65%, rgba(0,0,0,0.4) 85%, transparent 100%);
+    mask-image: radial-gradient(ellipse 100% 95% at 100% 100%, black 65%, rgba(0,0,0,0.4) 85%, transparent 100%);
+  }
+
+  /* ─── Mobile ──────────────────────────────────── */
+  @media (max-width: 480px) {
+    .medallion-wrap { width: 300px; height: 300px; }
+    .flower-tr { width: 200px; }
+    .flower-bl { width: 180px; }
+    .video-overlay-wrap { height: 35vh; }
+    .video-overlay-wrap--br { height: 38vh; right: -25%; }
+  }
+</style>

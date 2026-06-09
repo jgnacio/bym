@@ -1,0 +1,54 @@
+---
+interface Props {
+  targetDate: string;
+}
+
+const { targetDate } = Astro.props;
+---
+
+<section class="w-full py-16 md:py-20 px-6 text-center flex flex-col items-center bg-surface">
+  <h2 class="font-script text-5xl md:text-7xl text-primary mb-10 -rotate-1">Nos vemos en:</h2>
+
+  <div id="countdown" class="flex gap-6 md:gap-10 justify-center items-center mb-12">
+    <div class="flex flex-col items-center gap-1">
+      <span id="cd-days" class="text-5xl md:text-7xl text-primary" style="font-family:'EB Garamond',serif;">--</span>
+      <span class="font-label-caps text-[10px] md:text-xs text-on-surface-variant tracking-widest">DÍAS</span>
+    </div>
+    <span class="text-primary font-headline-md text-3xl md:text-5xl pb-5">:</span>
+    <div class="flex flex-col items-center gap-1">
+      <span id="cd-hours" class="text-5xl md:text-7xl text-primary" style="font-family:'EB Garamond',serif;">--</span>
+      <span class="font-label-caps text-[10px] md:text-xs text-on-surface-variant tracking-widest">HS</span>
+    </div>
+    <span class="text-primary font-headline-md text-3xl md:text-5xl pb-5">:</span>
+    <div class="flex flex-col items-center gap-1">
+      <span id="cd-mins" class="text-5xl md:text-7xl text-primary" style="font-family:'EB Garamond',serif;">--</span>
+      <span class="font-label-caps text-[10px] md:text-xs text-on-surface-variant tracking-widest">MIN</span>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ targetDate }}>
+  function updateCountdown() {
+    const target = new Date(targetDate).getTime();
+    const now = Date.now();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '0';
+      document.getElementById('cd-mins').textContent = '0';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('cd-days').textContent = String(days);
+    document.getElementById('cd-hours').textContent = String(hours);
+    document.getElementById('cd-mins').textContent = String(mins);
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 60_000);
+</script>

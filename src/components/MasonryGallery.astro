@@ -1,0 +1,261 @@
+---
+interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+}
+
+const { images } = Astro.props;
+
+// Deterministic pseudo-random values per image
+const frames = images.map((img, i) => {
+  const s = (i + 1) * 13.7;
+  const rot   = (Math.sin(s) * 7).toFixed(2);         // -7° to +7°
+  const tx    = (Math.cos(s * 1.3) * 10).toFixed(1);  // horizontal nudge
+  const ty    = (Math.sin(s * 0.9) * 8).toFixed(1);   // vertical nudge
+  return { ...img, rot, tx, ty };
+});
+---
+
+<section class="scattered-section w-full px-4 md:px-8 mb-20">
+  <div class="scattered-grid" id="scattered-grid">
+    {frames.map((img, i) => (
+      <div
+        class="photo-frame"
+        data-index={i}
+        style={`--rot:${img.rot}deg; --tx:${img.tx}px; --ty:${img.ty}px;`}
+      >
+        <img src={img.src} alt={img.alt} loading="lazy" decoding="async" draggable="false" />
+        <div class="frame-caption"></div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Lightbox -->
+  <div id="photo-lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <div id="lightbox-backdrop"></div>
+    <div id="lightbox-frame">
+      <img id="lightbox-img" src="" alt="" />
+      <div class="frame-caption"></div>
+      <button id="lightbox-close" aria-label="Cerrar">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const grid      = document.getElementById('scattered-grid')!;
+  const lightbox  = document.getElementById('photo-lightbox')!;
+  const backdrop  = document.getElementById('lightbox-backdrop')!;
+  const lbFrame   = document.getElementById('lightbox-frame')!;
+  const lbImg     = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lbClose   = document.getElementById('lightbox-close')!;
+
+  let active: HTMLElement | null = null;
+
+  function openPhoto(frame: HTMLElement) {
+    const img = frame.querySelector('img') as HTMLImageElement;
+
+    // FLIP: record origin rect
+    const origin = frame.getBoundingClientRect();
+    const cx = origin.left + origin.width / 2;
+    const cy = origin.top  + origin.height / 2;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Set CSS vars for start position
+    lbFrame.style.setProperty('--ox', `${cx - vw / 2}px`);
+    lbFrame.style.setProperty('--oy', `${cy - vh / 2}px`);
+    lbFrame.style.setProperty('--os', `${origin.width / Math.min(vw * 0.85, 600)}`);
+    lbFrame.style.setProperty('--or', getComputedStyle(frame).getPropertyValue('--rot'));
+
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+
+    active = frame;
+    frame.classList.add('is-grabbed');
+    lightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+
+    // Trigger animation next frame
+    requestAnimationFrame(() => {
+      lbFrame.classList.add('is-animating');
+    });
+  }
+
+  function closePhoto() {
+    if (!active) return;
+    lbFrame.classList.remove('is-animating');
+    lbFrame.classList.add('is-closing');
+
+    lbFrame.addEventListener('transitionend', () => {
+      lightbox.classList.remove('is-open');
+      lbFrame.classList.remove('is-closing');
+      active?.classList.remove('is-grabbed');
+      active = null;
+      document.body.style.overflow = '';
+    }, { once: true });
+  }
+
+  grid.addEventListener('click', e => {
+    const frame = (e.target as Element).closest<HTMLElement>('.photo-frame');
+    if (frame) openPhoto(frame);
+  });
+
+  lbClose.addEventListener('click', closePhoto);
+  backdrop.addEventListener('click', closePhoto);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePhoto(); });
+</script>
+
+<style>
+  /* ── Grid ───────────────────────────────────────── */
+  .scattered-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem 1.5rem;
+    padding: 1rem 0.5rem 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .scattered-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+  }
+
+  /* ── Polaroid frame ─────────────────────────────── */
+  .photo-frame {
+    background: #ffffff;
+    padding: 10px 10px 36px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.13), 0 1px 3px rgba(0,0,0,0.08);
+    transform: rotate(var(--rot)) translate(var(--tx), var(--ty));
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    will-change: transform;
+  }
+
+  .photo-frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .frame-caption {
+    height: 26px;
+  }
+
+  /* ── Hover: lift ────────────────────────────────── */
+  .photo-frame:hover {
+    transform: rotate(calc(var(--rot) * 0.2)) translate(var(--tx), calc(var(--ty) - 8px)) scale(1.07);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.22), 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 20;
+  }
+
+  /* ── Grabbed state (fades out in place) ─────────── */
+  .photo-frame.is-grabbed {
+    opacity: 0.3;
+    transform: rotate(var(--rot)) translate(var(--tx), var(--ty)) scale(0.96);
+    pointer-events: none;
+  }
+
+  /* ── Lightbox overlay ───────────────────────────── */
+  #photo-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  #photo-lightbox.is-open {
+    pointer-events: all;
+    opacity: 1;
+  }
+
+  #lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(30, 30, 20, 0);
+    transition: background 0.4s ease;
+  }
+
+  #photo-lightbox.is-open #lightbox-backdrop {
+    background: rgba(30, 30, 20, 0.75);
+  }
+
+  /* ── Lightbox frame ─────────────────────────────── */
+  #lightbox-frame {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    padding: 14px 14px 56px;
+    width: min(85vw, 520px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+
+    /* Start: at origin position/scale/rotation */
+    transform:
+      translate(var(--ox, 0px), var(--oy, 0px))
+      scale(var(--os, 0.2))
+      rotate(var(--or, 3deg));
+    opacity: 0;
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+      opacity 0.3s ease;
+  }
+
+  #lightbox-frame.is-animating {
+    transform: translate(0, 0) scale(1) rotate(-1deg);
+    opacity: 1;
+  }
+
+  #lightbox-frame.is-closing {
+    transform:
+      translate(var(--ox, 0px), var(--oy, 0px))
+      scale(var(--os, 0.2))
+      rotate(var(--or, 3deg));
+    opacity: 0;
+  }
+
+  #lightbox-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  /* ── Close button ───────────────────────────────── */
+  #lightbox-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #556345;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  #lightbox-close:hover {
+    background: #556345;
+    color: #ffffff;
+    transform: scale(1.1) rotate(90deg);
+  }
+</style>

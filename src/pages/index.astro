@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroPhoto from '../components/HeroPhoto.astro';
+import CoupleNames from '../components/CoupleNames.astro';
+import EventSection from '../components/EventSection.astro';
+import LocationSection from '../components/LocationSection.astro';
+import RSVPSection from '../components/RSVPSection.astro';
+import MasonryGallery from '../components/MasonryGallery.astro';
+import GiftsSection from '../components/GiftsSection.astro';
+import CountdownSection from '../components/CountdownSection.astro';
+
+const PORTRAIT_PHOTO   = '/IMG_2044.jpg';
+const COUPLE_PHOTO     = '/IMG_2045.jpg';
+const CANDID_PHOTO     = '/IMG_2046.jpg';
+const GALLERY_1        = '/IMG_2048.jpg';
+const GALLERY_2        = '/IMG_2981.jpg';
+const GALLERY_3        = '/IMG_2982.jpg';
+const GALLERY_4        = '/IMG_3853.jpg';
+const GALLERY_5        = '/IMG_8776.jpg';
+const EVENT_PHOTO      = '/IMG_8778.jpg';
+const EXTRA_1          = '/IMG_1534.JPG.jpeg';
+const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
+---
+
+<Layout title="Mauro & Barbi - Wedding Invitation">
+  <HeroPhoto
+    src={EXTRA_1}
+    videoSrc="/background_video.mp4"
+    introText="<p>Estamos <strong>inmensamente felices</strong> de comenzar una nueva etapa <strong>de la mano de Dios</strong>, dando este gran paso junto a quienes han sido parte de nuestra historia.</p><br/><p>Nos encantaría contar con <strong>tu presencia</strong> en este día tan especial porque compartirlo con vos lo haría <em>aún más hermoso e inolvidable.</em></p>"
+  />
+
+  <main class="flex-grow flex flex-col items-center w-full max-w-md md:max-w-4xl lg:max-w-6xl mx-auto py-8 md:py-12">
+    <CoupleNames name1="Mauro" name2="Barbi" />
+
+    <EventSection
+      photoSrc={EVENT_PHOTO}
+      monthLabel="Septiembre 2026"
+      dateDescription="Viernes 18/09/26 Registro Civil de Pando<br/>Sábado 19/09/26 Ceremonia en Monte Beraca - Ruta 8 km 21.000"
+      highlightedDay={19}
+      monthStartOffset={2}
+      totalDays={30}
+    />
+
+    <LocationSection
+      venues={[
+        {
+          name: 'Registro Civil de Pando',
+          detail: 'Viernes 18/09/26',
+          mapsUrl: 'https://maps.app.goo.gl/iSDT7uhihCAQ9bLE8',
+        },
+        {
+          name: 'Ceremonia en Monte Beraca',
+          detail: 'Sábado 19/09/26 - Ruta 8 km 21.000',
+          mapsUrl: 'https://maps.app.goo.gl/prccKzxecTQXLJmD6',
+        },
+      ]}
+    />
+
+    <RSVPSection
+      phones={['097 730 153', '097 554 025']}
+      photoSrc={COUPLE_PHOTO}
+    />
+
+    <MasonryGallery
+      images={[
+        { src: GALLERY_1,     alt: 'Mauro y Barbi' },
+        { src: FINAL_PHOTO,   alt: 'Mauro y Barbi' },
+        { src: GALLERY_5,     alt: 'Mauro y Barbi' },
+        { src: GALLERY_2,     alt: 'Mauro y Barbi' },
+        { src: GALLERY_4,     alt: 'Mauro y Barbi' },
+        { src: CANDID_PHOTO,  alt: 'Mauro y Barbi' },
+      ]}
+    />
+
+    <GiftsSection
+      alias="mauro.barbi.2026"
+      accountDetails="⚠️ Completar con datos reales antes de publicar"
+    />
+
+    <CountdownSection targetDate="2026-09-19T18:00:00-03:00" />
+
+    <section class="w-full pb-8 px-4 md:px-6">
+      <div class="relative w-full h-[50vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-md">
+        <img
+          src={GALLERY_5}
+          alt="Mauro y Barbi"
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+          <h2 class="font-script text-white -rotate-2" style="font-size: clamp(4rem, 14vw, 10rem); text-shadow: 0 4px 24px rgba(0,0,0,0.4);">
+            Mauro &amp; Barbi
+          </h2>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

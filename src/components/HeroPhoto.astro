@@ -1,0 +1,120 @@
+---
+interface Props {
+  src: string;
+  videoSrc?: string;
+  alt?: string;
+  headline?: string;
+  introText?: string;
+}
+
+const {
+  src,
+  videoSrc,
+  alt = 'Couple at a wedding ceremony',
+  headline = 'CON MUCHO AMOR TE INVITAMOS A NUESTRA BODA',
+  introText,
+} = Astro.props;
+---
+
+<!-- ── MOBILE layout ─────────────────────────────────────────── -->
+<section class="md:hidden w-full flex flex-col">
+
+  <!-- 1. Name + headline above the media -->
+  <div class="flex flex-col items-center pt-8 pb-4 px-6 gap-2">
+    <h1 class="font-script text-5xl text-primary -rotate-2 text-center">
+      Mauro &amp; Barbi
+    </h1>
+    <p class="font-label-caps text-label-caps tracking-[0.2em] text-primary/60 text-center uppercase">
+      {headline}
+    </p>
+  </div>
+
+  <!-- 2. Media: single container, no double-wrap, mx-4 for side gap -->
+  <div class="relative rounded-3xl overflow-hidden shadow-xl mx-4" style="height: 72svh;">
+    {videoSrc ? (
+      <video
+        class="w-full h-full object-cover object-bottom"
+        autoplay muted loop playsinline poster={src}
+      >
+        <source src={videoSrc} type="video/mp4" />
+      </video>
+    ) : (
+      <img src={src} alt={alt} class="w-full h-full object-cover object-bottom" />
+    )}
+
+    <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
+
+    <img
+      src="/couple.webp"
+      alt="Couple"
+      class="absolute saturate-[0.8] bottom-0 left-1/2 -translate-x-1/2 ml-6 w-[185%] max-w-none h-auto z-20 pointer-events-none"
+    />
+    <img
+      src="/couple.webp"
+      alt="Couple"
+      class="absolute bottom-0 blur-xl left-1/2 -translate-x-1/2 ml-6 w-[185%] max-w-none h-auto z-10 pointer-events-none"
+    />
+  </div>
+
+  <!-- 3. Intro text below the media -->
+  {introText && (
+    <div class="px-6 py-8">
+      <div
+        class="font-quote-italic italic text-on-surface/80 text-left text-lg leading-relaxed [&_strong]:font-bold [&_strong]:italic [&_strong]:text-on-surface [&_em]:text-on-surface/60"
+        set:html={introText}
+      />
+    </div>
+  )}
+</section>
+
+<!-- ── DESKTOP layout (original) ───────────────────────────── -->
+<section class="hidden md:block w-full" style="height: 100svh; padding: 20px;">
+  <div class="relative rounded-3xl overflow-hidden shadow-xl w-full h-full">
+    {videoSrc ? (
+      <video
+        class="w-full h-full object-cover object-center"
+        autoplay muted loop playsinline poster={src}
+      >
+        <source src={videoSrc} type="video/mp4" />
+      </video>
+    ) : (
+      <img src={src} alt={alt} class="w-full h-full object-cover object-center" />
+    )}
+
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
+
+    <h1
+      class="absolute top-10 left-10 font-script text-6xl text-white z-30 -rotate-2"
+      style="text-shadow: 0 2px 12px rgba(0,0,0,0.4);"
+    >
+      Mauro &amp; Barbi
+    </h1>
+
+    <div class="absolute top-0 inset-x-0 px-14 pt-12 flex flex-col items-center z-30">
+      <p class="font-quote-italic italic text-white/80 tracking-[0.2em] text-center text-[0.8rem]">
+        {headline}
+      </p>
+    </div>
+
+    {introText && (
+      <div class="absolute left-0 px-10 z-30 max-w-md space-y-3" style="top: 53%; transform: translateY(-50%);">
+        <div
+          class="font-quote-italic italic text-white/85 text-left text-2xl leading-relaxed [&_strong]:font-bold [&_strong]:italic [&_strong]:text-white [&_em]:text-white/70"
+          style="text-shadow: 0 1px 8px rgba(0,0,0,0.6);"
+          set:html={introText}
+        />
+      </div>
+    )}
+
+    <img
+      src="/couple.webp"
+      alt="Couple"
+      class="absolute saturate-[0.8] bottom-0 left-1/2 -translate-x-1/2 h-[108%] w-auto object-contain z-20 pointer-events-none"
+    />
+    <img
+      src="/couple.webp"
+      alt="Couple"
+      class="absolute bottom-0 blur-xl left-1/2 -translate-x-1/2 h-[108%] w-auto object-contain z-10 pointer-events-none"
+    />
+  </div>
+</section>

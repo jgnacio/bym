@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mauro &amp; Barbi - Wedding Invitation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&amp;family=Montserrat:wght@400;600&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&amp;family=Dancing+Script:wght@400;700&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-fixed": "#141f07",
+                "surface-container-highest": "#e3e3de",
+                "on-error-container": "#93000a",
+                "background": "#faf9f5",
+                "surface-bright": "#faf9f5",
+                "tertiary-container": "#c9bce1",
+                "on-secondary": "#ffffff",
+                "inverse-on-surface": "#f1f1ed",
+                "error-container": "#ffdad6",
+                "error": "#ba1a1a",
+                "secondary": "#7c5357",
+                "on-tertiary-container": "#544a69",
+                "tertiary-fixed": "#eaddff",
+                "on-tertiary-fixed": "#1f1732",
+                "surface-tint": "#556345",
+                "primary-fixed-dim": "#bdcca8",
+                "on-error": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "on-background": "#1a1c1a",
+                "on-secondary-fixed-variant": "#623c40",
+                "surface-dim": "#dadad6",
+                "on-primary-container": "#465337",
+                "on-secondary-container": "#795154",
+                "secondary-fixed": "#ffdadc",
+                "on-surface-variant": "#45483f",
+                "tertiary-fixed-dim": "#cdc1e5",
+                "on-secondary-fixed": "#301216",
+                "on-primary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-tertiary-fixed-variant": "#4b4260",
+                "primary": "#556345",
+                "surface-container-low": "#f4f4ef",
+                "surface-variant": "#e3e3de",
+                "on-surface": "#1a1c1a",
+                "inverse-primary": "#bdcca8",
+                "outline-variant": "#c5c8bc",
+                "surface-container": "#efeeea",
+                "primary-fixed": "#d9e8c2",
+                "surface-container-high": "#e9e8e4",
+                "surface": "#faf9f5",
+                "tertiary": "#635979",
+                "secondary-container": "#fdc7cb",
+                "outline": "#75786e",
+                "inverse-surface": "#2f312e",
+                "on-primary-fixed-variant": "#3e4b2f",
+                "primary-container": "#b8c7a3",
+                "secondary-fixed-dim": "#eeb9bd"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "stack-sm": "1rem",
+                "stack-md": "2rem",
+                "inner-padding": "2rem",
+                "section-gap": "80px",
+                "container-max": "1200px"
+        },
+        "fontFamily": {
+                "body-md": ["DM Sans", "sans-serif"],
+                "label-caps": ["Montserrat", "sans-serif"],
+                "headline-md": ["Playfair Display", "serif"],
+                "display-lg": ["Playfair Display", "serif"],
+                "quote-italic": ["Playfair Display", "serif"],
+                "body-lg": ["DM Sans", "sans-serif"],
+                "display-lg-mobile": ["Playfair Display", "serif"],
+                "script": ["Dancing Script", "cursive"]
+        },
+        "fontSize": {
+                "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                "label-caps": ["12px", { "lineHeight": "1.5", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                "quote-italic": ["24px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                "display-lg-mobile": ["36px", { "lineHeight": "1.2", "fontWeight": "600" }]
+        }
+      },
+    },
+  }
+</script>
+<style>
+        .torn-edge {
+            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0 L1200,0 L1200,80 Q1150,100 1100,60 T1000,80 T900,40 T800,90 T700,50 T600,80 T500,40 T400,90 T300,50 T200,80 T100,40 T0,70 Z" fill="black"/></svg>');
+            mask-size: 100% 100%;
+            mask-repeat: no-repeat;
+            mask-position: bottom;
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0 L1200,0 L1200,80 Q1150,100 1100,60 T1000,80 T900,40 T800,90 T700,50 T600,80 T500,40 T400,90 T300,50 T200,80 T100,40 T0,70 Z" fill="black"/></svg>');
+            -webkit-mask-size: 100% 100%;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: bottom;
+            padding-bottom: 2rem;
+        }
+        .text-shadow-elegant {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased font-body-md overflow-x-hidden min-h-screen flex flex-col md:hidden">
+<!-- TopAppBar -->
+<main class="flex-grow flex flex-col items-center w-full max-w-md mx-auto py-12">
+<!-- Intro Text -->
+<section class="px-8 text-center mb-12">
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
+                Estamos inmensamente felices de comenzar una nueva etapa de la mano de Dios, y queremos dar este gran paso junto a las personas que han sido parte de nuestra historia y de nuestro caminar. Por eso, nos encantaría contar con tu presencia y compañía en un día tan especial para nosotros, porque compartir este momento con vos lo haría aún más hermoso e inolvidable.
+            </p>
+</section>
+<!-- Hero Photo & Headline -->
+<section class="w-full flex flex-col items-center mb-16 relative">
+<div class="w-full relative torn-edge bg-surface-container-highest">
+<img alt="Couple at a wedding ceremony" class="w-full h-[60vh] object-cover object-center" src="https://lh3.googleusercontent.com/aida/AP1WRLuzOhENXP-VBFGS1pu_ShbFST4wmDAkd5D_X7JGeoqTBDcEl5fqJr5DcYdw_KkA_X63A-w-HutvK1fZxYoFHr93FBSH6x7l0-nQWU2I4knqCvn45LTgk5-0eWWUl6wFiM15zlgKq9IS2cpp9WkJhrnyDmegYT3vwIm2s__QU3qtrhxLiuV0HAaikmaQXeUPeBlkRY5s6Voe_b1zzvJHD2_10FCVHqIxJbI2x7tpZC7XJLmLd6q4OstkNRQ"/>
+</div>
+<div class="absolute bottom-0 translate-y-1/2 flex flex-col items-center bg-surface-container-lowest px-6 py-4 rounded-full shadow-md border border-primary/10 z-10">
+<p class="font-label-caps text-label-caps text-primary tracking-widest text-center text-[10px]">
+            CON MUCHO AMOR TE INVITAMOS A NUESTRA BODA
+        </p>
+</div>
+</section>
+<!-- Couple Names -->
+<section class="text-center my-12 px-4 w-full">
+<h1 class="font-script text-6xl text-primary text-shadow-elegant my-4 transform -rotate-2">Mauro &amp; Barbi</h1>
+<div class="flex justify-center items-center gap-4 mt-6">
+<div class="h-px w-16 bg-primary-container"></div>
+<span class="font-headline-md text-headline-md italic text-primary">&amp;</span>
+<div class="h-px w-16 bg-primary-container"></div>
+</div>
+</section>
+<!-- Event Details & Calendar Section -->
+<section class="w-full bg-surface-container-low text-on-surface px-6 py-12 flex flex-col items-center relative overflow-hidden">
+<!-- Subtle background accent -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent pointer-events-none"></div>
+<div class="w-full mb-10 z-10 relative">
+<img alt="Romantic outdoor portrait" class="w-full h-auto rounded-lg shadow-md object-cover border-4 border-surface-container-highest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmgnwrOsXqrSyRpxrr31qDCe6lubH5QsYPgmakeHcDu9FNj2t76mefcAhy0bu9A1y03J4yeRkdiG_NPZSkLaidOI3CX2V7o0dg-B_Uasfq-xZBgDl_NHB1KfhDRlwKf9IZCaVUg4xZGxuLsYyndsO0YV2oH3rafXeqfBmy3zOVN1bJ-hwPxfdDNuQfofw7g89K80tMkanXYzUn0SnXrSvcWChyeSoikDr646qatg42Vbk0ecDRr59ob5Ij1e4wQ9c7oBbduiU-Z7_V"/>
+</div>
+<div class="w-full max-w-[320px] flex flex-col items-center gap-8 z-10">
+<!-- Date/Time Left Column style content -->
+<div class="flex flex-col items-center text-center pb-6 border-b border-primary/20 w-full">
+<span class="font-script text-4xl text-primary mb-2">Septiembre 2026</span>
+<p class="font-body-md text-on-surface-variant mt-4 leading-relaxed">
+    Viernes 19/09/26 Registro Civil de Pando<br/>
+    Ceremonia en Monte Beraca - Ruta 8 km 21.000
+</p>
+</div>
+<!-- Calendar Grid -->
+<div class="w-full flex flex-col gap-4">
+<div class="grid grid-cols-7 gap-2 text-center font-label-caps text-[10px] text-primary/80 mb-2">
+<span class="">D</span><span class="">L</span><span class="">M</span><span class="">M</span><span class="">J</span><span class="">V</span><span class="">S</span>
+</div>
+<div class="grid grid-cols-7 gap-y-4 gap-x-2 text-center font-body-md text-sm">
+<!-- Empty slots for Sept 2026 start (Starts on a Tuesday) -->
+<span class="text-on-surface/10"></span>
+<span class="text-on-surface/10"></span>
+<span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span>
+<span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="">10</span><span class="">11</span><span class="">12</span>
+<span class="">13</span><span class="">14</span><span class="">15</span><span class="">16</span><span class="">17</span><span class="">18</span>
+<!-- Highlighted Date -->
+<span class="relative flex justify-center items-center w-8 h-8 rounded-full bg-secondary-container/50 border border-secondary mx-auto">
+<span class="z-10 text-secondary font-bold">19</span>
+<span class="material-symbols-outlined text-secondary absolute -top-3 text-xs" style='font-variation-settings: "FILL" 1;'>favorite</span>
+</span>
+<span class="">20</span>
+<span class="">21</span><span class="">22</span><span class="">23</span><span class="">24</span><span class="">25</span><span class="">26</span><span class="">27</span>
+<span class="">28</span><span class="">29</span><span class="">30</span>
+<!-- Empty slots end -->
+<span class="text-on-surface/10"></span>
+<span class="text-on-surface/10"></span>
+<span class="text-on-surface/10"></span>
+<span class="text-on-surface/10"></span>
+</div>
+</div>
+</div>
+</section><section class="w-full bg-surface-container text-on-surface px-6 py-16 flex flex-col items-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-tertiary-container/20 to-transparent pointer-events-none"></div>
+<div class="w-full max-w-[320px] flex flex-col items-center gap-12 z-10">
+<h2 class="font-script text-5xl text-primary text-center mb-4">Ubicación</h2>
+<div class="flex flex-col items-center text-center w-full group">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined">location_on</span>
+<h3 class="font-headline-md text-xl">Registro Civil de Pando</h3>
+</div>
+<p class="font-body-md text-on-surface-variant mb-6">Viernes 19/09/26</p>
+<a class="inline-flex items-center px-8 py-3 bg-primary text-on-primary font-label-caps text-[10px] tracking-widest rounded-full hover:bg-on-primary-fixed-variant transition-colors duration-300 shadow-sm" href="#">
+                COMO LLEGAR
+            </a>
+</div>
+<div class="h-px w-24 bg-primary/20"></div>
+<div class="flex flex-col items-center text-center w-full group">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined">location_on</span>
+<h3 class="font-headline-md text-xl">Ceremonia en Monte Beraca</h3>
+</div>
+<p class="font-body-md text-on-surface-variant mb-6">Ruta 8 km 21.000</p>
+<a class="inline-flex items-center px-8 py-3 bg-primary text-on-primary font-label-caps text-[10px] tracking-widest rounded-full hover:bg-on-primary-fixed-variant transition-colors duration-300 shadow-sm" href="#">
+                COMO LLEGAR
+            </a>
+</div>
+</div>
+</section>
+<!-- RSVP & Details -->
+<section class="w-full flex flex-col items-center py-16 px-6 text-center bg-surface">
+<h2 class="font-headline-md text-2xl text-primary mb-4">RSVP</h2>
+<p class="font-body-md text-on-surface-variant mb-6">
+        Confirmar asistencia a: 097 730 153 o 097 554 025
+    </p>
+<div class="w-full my-8">
+<img alt="Romantic candid couple" class="w-full h-[40vh] object-cover rounded shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlkIVr8YbhVZEX5vi6shQH61DsoqRwNSHCGCtFvETG0R-Thj4VXPAaOciIZo1Si1ctcXZFSDdxWWvkXlHDk_M1cxThDCEB45Negz3yqvGUIK76aHtc-cyQsNbUKohSffiW1vJc67zUz3LxkLdQN9hbA2FwEL5ZWz78Nxatx5tv1Ml4KknM18XBWS1Dg-61jxxIQlHoZfiP4DfV7kKNux5w0vYMHsCAZJbqut8fsihpnjLiFu4tTowVXoGcZCKoc1mSNyUyWv7xoFwp"/>
+</div>
+<h2 class="font-headline-md text-2xl text-primary mb-4 mt-8">Dress Code</h2>
+<p class="font-body-md text-on-surface-variant mb-12">
+        Vestimenta: semi formal
+    </p>
+</section>
+<!-- Photo Gallery Grid -->
+<section class="w-full px-4 mb-16">
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2">
+<img alt="Wedding details" class="w-full h-48 object-cover rounded shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQim0uSHQrZMxg1rVzQT9-Zacw9J6TCKFzAh9LMuIl21Mxo7cK2zj6azYesmExaZAyL3uXWnSE9iz7jGRIQsK7ZoFOqz6K1YOaSN3UzB3-HSznuFHN9G-RGzQWsCsyhwM1EWW1b8nLHOUbL8IO9hwim7Mwgiy07rd5z914j_oNUfrPPM3ypheKveHhlznYmzN7k4lKMSKnNwTVk7EzWe5Enarj92BgoHyTg-ChLKpT6yeXb93VWrnHyOuYJI3cKZSm6ti0dSEbOpaZ"/>
+</div>
+<div>
+<img alt="Couple walking" class="w-full h-48 object-cover rounded shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBMywMGSLvQzDICqGl1BZMiOTPrNlZTvwVEd1pwftCl43fx45t8FKTJkXOL5eHegWkl31fu6DTbBiOcsbh5LRaj6Xsjow1I4m3mYO7ef4r4tkwrc6wGb1CRESbYpYKbPjGGn0idL8-UFp6cg9DrM8rJukLACW3nNxx9qLlG7eEuMsIAKZlNVeI86TOibLwPmOhJJ_eumfTD8VEuepI2LXknHH_k0yz9mF3Cxk6zYcH-uqRebVwJ72_ZKhffl_07zmI5RmiXSXMPMr"/>
+</div>
+<div>
+<img alt="Elegant couple portrait" class="w-full h-48 object-cover rounded shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCruCi7aTcT48VLxS6Rv4TMeOfTsFkCpx44ztZCaLC_wZcWQj9GWUYJUjZbc6jz0pjSIivse9EfiYiu2hemSQN696UaE5YT3R7z76fO3TkxKfY7PDmGeOcTWtgSamkQWLRv779JejXeHxC1_KPomJhEPFLibFIyvxeCHsKNCU9xOa9HV2JteFne13x40vjhIJ7co6J8uuLIH5EnFRgA1bcLJSH-vMQFXX60eco8-V-xUvN_gU-ROTtpppO4z1PEL6uvk_4glXpLsgsC"/>
+</div>
+</div>
+</section>
+<!-- Gifts Section -->
+<section class="w-full px-6 py-12 bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-4">card_giftcard</span>
+<h2 class="font-headline-md text-2xl text-primary mb-6">Regalos</h2>
+<p class="font-body-md text-on-surface-variant mb-8 max-w-sm mx-auto">
+        Sugerencias de regalo: Lo más importante para nosotros es que puedan estar presentes este día tan importante. Cualquier detalle de su parte será bienvenido con mucha gratitud.
+    </p>
+<div class="bg-surface p-6 rounded-lg shadow-sm border border-primary-container/30 max-w-sm mx-auto text-left">
+<div class="mb-4">
+<span class="font-label-caps text-xs text-primary block mb-1">Nuestro Alias:</span>
+<p class="font-body-md text-on-surface">[Alias here]</p>
+</div>
+<div>
+<span class="font-label-caps text-xs text-primary block mb-1">Cuentas para transferir:</span>
+<p class="font-body-md text-on-surface">[Account details here]</p>
+</div>
+</div>
+</section>
+<!-- Countdown Section -->
+<section class="w-full py-16 px-6 text-center flex flex-col items-center bg-surface">
+<h2 class="font-script text-4xl text-primary mb-8">Nos vemos en:</h2>
+<!-- Simple static visual representation of a countdown -->
+<div class="flex gap-4 justify-center items-center mb-12">
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-3xl text-secondary">120</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">DÍAS</span>
+</div>
+<span class="text-secondary font-headline-md text-2xl pb-4">:</span>
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-3xl text-secondary">14</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">HS</span>
+</div>
+<span class="text-secondary font-headline-md text-2xl pb-4">:</span>
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-3xl text-secondary">30</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">MIN</span>
+</div>
+</div>
+</section>
+<!-- Final Photo -->
+<section class="w-full pb-8">
+<img alt="Epic landscape sunset" class="w-full h-[50vh] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHaOHGrEvDgQpxgXr_2FYxZxyOr7bQovFjkODcxozHr10mPQbz_3YVoaeveUB06xLnABz0xO7EyC-TdCjsI3a9ip7YF9FIr4zMRvnXcdilQsBXVW-fk2ZfOoJNnADnMwQ-8olrORlPGUVmGu-icia-9ltXOPuh7VQTEMKRE9xPl4_8_Y1QQPdc6rQ3WcjsGBTeRfXznmQsOEMdqV-lscMTzEz3mwm90YWhFzXtU9jkpD_DbSCJsWluzeamfnyHuV-gPjjXvU_1W595"/>
+</section>
+</main>
+<!-- BottomNavBar -->
+</body></html>
