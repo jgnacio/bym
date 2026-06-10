@@ -1,5 +1,6 @@
 ---
 import SplashScreen from '../components/SplashScreen.astro';
+import MusicPlayer from '../components/MusicPlayer.astro';
 
 interface Props {
   title?: string;
@@ -26,6 +27,7 @@ const { title = 'Mauro & Barbi - Wedding Invitation' } = Astro.props;
   <body class="bg-surface text-on-surface antialiased font-body-md overflow-x-hidden min-h-screen flex flex-col">
     <SplashScreen />
     <slot />
+    <MusicPlayer src="/wedding-mix.mp3" />
   </body>
 </html>
 

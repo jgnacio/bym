@@ -1,96 +1,58 @@
 ---
 interface Props {
   phones: string[];
-  photoSrc: string;
-  photoAlt?: string;
   dressCode?: string;
 }
 
 const {
   phones,
-  photoSrc,
-  photoAlt = 'Romantic candid couple',
   dressCode = 'semi formal',
 } = Astro.props;
 ---
 
 <section class="w-full py-20 px-6 md:px-10 bg-surface">
-  <div class="flex flex-col md:flex-row-reverse items-center md:items-stretch gap-10 md:gap-16 max-w-4xl mx-auto">
+  <div class="grid grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto gap-12 md:gap-0">
 
-    <!-- Foto -->
-    <div class="w-full md:w-1/2 flex-shrink-0 relative">
-      <img
-        src={photoSrc}
-        alt={photoAlt}
-        class="w-full h-[45vh] md:h-full md:max-h-[480px] object-cover rounded-3xl shadow-md"
-      />
-      <div id="photo-reminder" class="absolute inset-0 rounded-3xl flex flex-col items-center justify-center gap-3 bg-black/50 backdrop-blur-[2px]">
-        <span style="font-size:2rem;">📸</span>
-        <p class="text-white font-semibold text-sm tracking-wide text-center px-4">Recordá cambiar esta foto</p>
-        <button
-          id="photo-reminder-close"
-          class="mt-1 px-4 py-1.5 text-xs text-white border border-white/50 rounded-full hover:bg-white hover:text-black transition-all"
-        >
-          Ya lo sé, ocultar
-        </button>
+    <!-- RSVP -->
+    <div class="flex flex-col items-center text-center gap-3 md:pr-10 md:border-r md:border-primary/15">
+      <span class="font-label-caps text-label-caps tracking-[0.25em] text-primary/50 uppercase text-xs">Confirmación</span>
+      <h2 class="font-script text-5xl md:text-6xl text-primary -rotate-1">RSVP</h2>
+      <p class="font-body-md text-on-surface-variant md:text-base leading-relaxed">
+        Confirmá tu asistencia escribiéndonos al
+      </p>
+      <div class="flex flex-col gap-2 mt-1">
+        {phones.map(phone => (
+          <a
+            href={`https://wa.me/${phone.replace(/\s/g, '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/8 border border-primary/20 rounded-full text-primary font-label-caps text-sm tracking-wide hover:bg-primary hover:text-white transition-all duration-300"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.528 5.855L0 24l6.326-1.51A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.36-.213-3.754.896.948-3.651-.234-.374A9.818 9.818 0 1112 21.818z"/>
+            </svg>
+            {phone}
+          </a>
+        ))}
       </div>
     </div>
 
-    <!-- Contenido -->
-    <div class="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center gap-10 text-center md:text-left">
-
-      <!-- RSVP -->
-      <div class="flex flex-col items-center md:items-start gap-3">
-        <span class="font-label-caps text-label-caps tracking-[0.25em] text-primary/50 uppercase text-xs">Confirmación</span>
-        <h2 class="font-script text-5xl md:text-6xl text-primary -rotate-1">RSVP</h2>
-        <p class="font-body-md text-on-surface-variant md:text-base leading-relaxed">
-          Confirmá tu asistencia escribiéndonos al
-        </p>
-        <div class="flex flex-col gap-2 mt-1">
-          {phones.map(phone => (
-            <a
-              href={`https://wa.me/${phone.replace(/\s/g, '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/8 border border-primary/20 rounded-full text-primary font-label-caps text-sm tracking-wide hover:bg-primary hover:text-white transition-all duration-300"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.528 5.855L0 24l6.326-1.51A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.36-.213-3.754.896.948-3.651-.234-.374A9.818 9.818 0 1112 21.818z"/>
-              </svg>
-              {phone}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Divisor -->
-      <div class="flex items-center gap-4 w-full max-w-[200px]">
-        <div class="h-px flex-1 bg-primary/15"></div>
-        <span class="font-script text-primary/30 text-lg">&amp;</span>
-        <div class="h-px flex-1 bg-primary/15"></div>
-      </div>
-
-      <!-- Dress Code -->
-      <div class="flex flex-col items-center md:items-start gap-3">
-        <span class="font-label-caps text-label-caps tracking-[0.25em] text-primary/50 uppercase text-xs">Vestimenta</span>
-        <h2 class="font-script text-5xl md:text-6xl text-primary rotate-1">Dress Code</h2>
-        <p class="font-body-md text-on-surface-variant capitalize text-base mt-1">
-          {dressCode}
-        </p>
-      </div>
-
+    <!-- Divisor horizontal solo en mobile -->
+    <div class="flex md:hidden items-center gap-4 justify-center">
+      <div class="h-px flex-1 bg-primary/15"></div>
+      <span class="font-script text-primary/30 text-lg">&amp;</span>
+      <div class="h-px flex-1 bg-primary/15"></div>
     </div>
+
+    <!-- Dress Code -->
+    <div class="flex flex-col items-center text-center gap-3 md:pl-10">
+      <span class="font-label-caps text-label-caps tracking-[0.25em] text-primary/50 uppercase text-xs">Vestimenta</span>
+      <h2 class="font-script text-5xl md:text-6xl text-primary rotate-1">Dress Code</h2>
+      <p class="font-body-md text-on-surface-variant capitalize text-base mt-1">
+        {dressCode}
+      </p>
+    </div>
+
   </div>
 </section>
-
-<script>
-  document.getElementById('photo-reminder-close')?.addEventListener('click', () => {
-    const reminder = document.getElementById('photo-reminder');
-    if (reminder) {
-      reminder.style.transition = 'opacity 0.4s ease';
-      reminder.style.opacity = '0';
-      setTimeout(() => reminder.remove(), 400);
-    }
-  });
-</script>

@@ -118,6 +118,7 @@
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     }, { once: true });
+    document.dispatchEvent(new CustomEvent('splashDismissed'));
   }
 
   cta?.addEventListener('click', dismissSplash);

@@ -1,0 +1,118 @@
+---
+interface Props {
+  src: string;
+}
+const { src } = Astro.props;
+---
+
+<div id="music-player" class="fixed bottom-6 right-6 z-50 opacity-0 transition-opacity duration-700 pointer-events-none">
+  <button
+    id="music-toggle"
+    aria-label="Pausar música"
+    class="group w-11 h-11 rounded-full bg-white/70 backdrop-blur-md border border-primary/15 shadow-sm flex items-center justify-center text-primary/60 hover:text-primary hover:bg-white/90 hover:shadow-md transition-all duration-300"
+  >
+    <!-- Ícono Playing (ondas) -->
+    <svg id="icon-playing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+    </svg>
+    <!-- Ícono Muted (tachado) -->
+    <svg id="icon-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="hidden" aria-hidden="true">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+      <line x1="2" y1="2" x2="22" y2="22"/>
+    </svg>
+  </button>
+</div>
+
+<audio id="bg-music" loop preload="auto">
+  <source src={src} type="audio/mpeg" />
+</audio>
+
+<script>
+  const audio = document.getElementById('bg-music') as HTMLAudioElement;
+  const player = document.getElementById('music-player') as HTMLDivElement;
+  const toggle = document.getElementById('music-toggle') as HTMLButtonElement;
+  const iconPlaying = document.getElementById('icon-playing') as SVGElement;
+  const iconMuted = document.getElementById('icon-muted') as SVGElement;
+
+  const TARGET_VOL = 0.18;
+  let started = false;
+
+  function showPlayer() {
+    player.style.opacity = '1';
+    player.style.pointerEvents = 'auto';
+  }
+
+  function setPlayingState(playing: boolean) {
+    iconPlaying.classList.toggle('hidden', !playing);
+    iconMuted.classList.toggle('hidden', playing);
+    toggle.setAttribute('aria-label', playing ? 'Pausar música' : 'Reproducir música');
+  }
+
+  function fadeIn() {
+    audio.volume = 0;
+    let vol = 0;
+    const step = TARGET_VOL / 40;
+    const fade = setInterval(() => {
+      vol = Math.min(vol + step, TARGET_VOL);
+      audio.volume = vol;
+      if (vol >= TARGET_VOL) clearInterval(fade);
+    }, 100);
+  }
+
+  async function startMusic() {
+    if (started) return;
+    started = true;
+    try {
+      await audio.play();
+      fadeIn();
+      setPlayingState(true);
+      showPlayer();
+    } catch {
+      // Browser bloqueó autoplay — esperar primer gesto del usuario
+      started = false;
+    }
+  }
+
+  function startOnGesture() {
+    if (started) return;
+    startMusic();
+    document.removeEventListener('click', startOnGesture);
+    document.removeEventListener('touchstart', startOnGesture);
+  }
+
+  // Intentar autoplay inmediato al cargar
+  if (document.readyState === 'complete') {
+    startMusic().then(() => {
+      if (!started) {
+        document.addEventListener('click', startOnGesture, { once: true });
+        document.addEventListener('touchstart', startOnGesture, { once: true });
+      }
+    });
+  } else {
+    window.addEventListener('load', () => {
+      startMusic().then(() => {
+        if (!started) {
+          document.addEventListener('click', startOnGesture, { once: true });
+          document.addEventListener('touchstart', startOnGesture, { once: true });
+        }
+      });
+    }, { once: true });
+  }
+
+  // Toggle play/pause
+  toggle.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    if (audio.paused) {
+      await audio.play();
+      fadeIn();
+      setPlayingState(true);
+    } else {
+      audio.pause();
+      setPlayingState(false);
+    }
+  });
+</script>
