@@ -62,7 +62,11 @@
 
     <div class="names-overlay">
       <span class="couple-name">Mauro &amp; Barbi</span>
-      <p class="splash-date">19 · 09 · 2026</p>
+      <p class="splash-date">12 · 09 · 2026</p>
+      <p class="splash-verse">
+        Las muchas aguas no pueden apagar el amor,<br/>ni los ríos lo pueden extinguir.
+        <span class="splash-verse-ref">Cantares 8:7</span>
+      </p>
       <button id="splash-cta" aria-label="Abrir invitación">
         Abrir invitación
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -234,6 +238,30 @@
     animation: fadeInUp 0.7s 2.8s ease forwards;
   }
 
+  /* ─── Verse ──────────────────────────────────── */
+  .splash-verse {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(0.72rem, 1.6vw, 0.88rem);
+    font-style: italic;
+    color: #7c5357;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeInUp 0.7s 3s ease forwards;
+    margin-top: 0.2rem;
+  }
+
+  .splash-verse-ref {
+    display: block;
+    font-style: normal;
+    font-size: 0.72em;
+    letter-spacing: 0.1em;
+    margin-top: 0.35rem;
+    color: #556345;
+    opacity: 0.7;
+  }
+
   /* ─── CTA ─────────────────────────────────────── */
   #splash-cta {
     display: inline-flex;
@@ -251,7 +279,7 @@
     cursor: pointer;
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeInUp 0.7s 3.1s ease forwards;
+    animation: fadeInUp 0.7s 3.5s ease forwards;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 

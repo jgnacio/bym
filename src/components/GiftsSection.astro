@@ -1,14 +1,12 @@
 ---
 interface Props {
   message?: string;
-  alias?: string;
-  accountDetails?: string;
+  giftUrl?: string;
 }
 
 const {
   message = 'Lo más importante para nosotros es que puedan estar presentes este día tan importante. Cualquier detalle de su parte será bienvenido con mucha gratitud.',
-  alias,
-  accountDetails,
+  giftUrl = '#',
 } = Astro.props;
 ---
 
@@ -19,22 +17,21 @@ const {
     {message}
   </p>
 
-  <div class="bg-surface p-6 rounded-3xl shadow-sm border border-primary-container/30 max-w-sm md:max-w-md mx-auto text-left">
-    {alias && (
-      <div class="mb-4">
-        <span class="font-label-caps text-xs text-primary block mb-1">Nuestro Alias:</span>
-        <p class="font-body-md text-on-surface">{alias}</p>
-      </div>
-    )}
-    {accountDetails && (
-      <div>
-        <span class="font-label-caps text-xs text-primary block mb-1">Cuentas para transferir:</span>
-        {accountDetails.startsWith('⚠️') ? (
-          <p class="text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mt-1">{accountDetails}</p>
-        ) : (
-          <p class="font-body-md text-on-surface">{accountDetails}</p>
-        )}
-      </div>
-    )}
+  <div class="inline-flex flex-col items-start gap-1 mb-8 px-6 py-5 rounded-2xl border border-primary/30 bg-surface text-left max-w-sm md:max-w-md mx-auto">
+    <span class="font-body-md font-semibold text-primary tracking-wide">Cuenta Mauro (Boda)</span>
+    <span class="font-body-md text-on-surface-variant">BROU $ 110366197-00003</span>
+    <span class="font-body-md text-on-surface-variant">Otros bancos: 11036619700003</span>
   </div>
+
+  <a
+    href={giftUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-primary text-primary font-serif italic text-base hover:bg-primary hover:text-on-primary transition-colors duration-300"
+  >
+    Ver nuestra lista de regalos
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
 </section>

@@ -17,9 +17,9 @@ const GALLERY_2        = '/IMG_2981.jpg';
 const GALLERY_3        = '/IMG_2982.jpg';
 const GALLERY_4        = '/IMG_3853.jpg';
 const GALLERY_5        = '/IMG_8776.jpg';
-const EVENT_PHOTO      = '/IMG_8778.jpg';
+const EVENT_PHOTO      = '/IMG_2798.webp';
 const EXTRA_1          = '/IMG_1534.JPG.jpeg';
-const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
+const FINAL_PHOTO      = '/IMG_4713.webp';
 ---
 
 <Layout title="Mauro & Barbi - Wedding Invitation">
@@ -35,8 +35,8 @@ const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
     <EventSection
       photoSrc={EVENT_PHOTO}
       monthLabel="Septiembre 2026"
-      dateDescription="Viernes 18/09/26 Registro Civil de Pando<br/>Sábado 19/09/26 Ceremonia en Monte Beraca - Ruta 8 km 21.000"
-      highlightedDay={19}
+      dateDescription="Viernes 11/09/26 Registro Civil de Pando<br/>Sábado 12/09/26 Ceremonia en Monte Beraca - Ruta 8 km 21.000"
+      highlightedDay={12}
       monthStartOffset={2}
       totalDays={30}
     />
@@ -45,12 +45,12 @@ const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
       venues={[
         {
           name: 'Registro Civil de Pando',
-          detail: 'Viernes 18/09/26',
-          mapsUrl: 'https://maps.app.goo.gl/iSDT7uhihCAQ9bLE8',
+          detail: 'Viernes 11/09/26',
+          mapsUrl: 'https://maps.app.goo.gl/5CJ57NFbQKTxwvqG6',
         },
         {
           name: 'Ceremonia en Monte Beraca',
-          detail: 'Sábado 19/09/26 - Ruta 8 km 21.000',
+          detail: 'Sábado 12/09/26 - Ruta 8 km 21.000',
           mapsUrl: 'https://maps.app.goo.gl/prccKzxecTQXLJmD6',
         },
       ]}
@@ -71,12 +71,26 @@ const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
       ]}
     />
 
-    <GiftsSection
-      alias="mauro.barbi.2026"
-      accountDetails="⚠️ Completar con datos reales antes de publicar"
-    />
+    <div class="w-full flex justify-center pb-10 px-4">
+      <a
+        href="https://photos.app.goo.gl/PuEZrsnVHQJSFM4v9"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#556345] text-[#556345] font-sans text-sm tracking-wide hover:bg-[#556345] hover:text-white transition-colors duration-200"
+        style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em;"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        Ver álbum de fotos
+      </a>
+    </div>
 
-    <CountdownSection targetDate="2026-09-19T18:00:00-03:00" />
+    <GiftsSection />
+
+    <CountdownSection targetDate="2026-09-12T18:00:00-03:00" />
 
     <section class="w-full pb-8 px-4 md:px-6">
       <div class="relative w-full h-[50vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-md">
@@ -91,6 +105,13 @@ const FINAL_PHOTO      = '/IMG_7226.JPG.jpeg';
           </h2>
         </div>
       </div>
+    </section>
+
+    <section class="w-full py-12 px-4 flex flex-col items-center gap-2 text-center">
+      <p class="font-serif italic text-[#7c5357]" style="font-size: clamp(0.82rem, 1.8vw, 1rem); line-height: 1.7;">
+        Las muchas aguas no pueden apagar el amor,<br/>ni los ríos lo pueden extinguir.
+      </p>
+      <span class="font-serif text-[#556345]" style="font-size: 0.75rem; letter-spacing: 0.1em; opacity: 0.7;">Cantares 8:7</span>
     </section>
   </main>
 </Layout>

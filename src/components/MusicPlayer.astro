@@ -39,7 +39,13 @@ const { src } = Astro.props;
   const iconMuted = document.getElementById('icon-muted') as SVGElement;
 
   const TARGET_VOL = 0.18;
+  const MAX_PLAY = 180;      // segundos de música (3 min)
+  const INTRO_SKIP = 10;    // segundos de intro a saltarse
+  const FADE_OUT = 5;        // segundos de fade out al final
   let started = false;
+  let played = 0;
+  let lastTs = 0;
+  let fading = false;
 
   function showPlayer() {
     player.style.opacity = '1';
@@ -63,10 +69,42 @@ const { src } = Astro.props;
     }, 100);
   }
 
+  function fadeOutAndRestart() {
+    if (fading) return;
+    fading = true;
+    const startVol = audio.volume;
+    const step = startVol / (FADE_OUT * 10);
+    const fade = setInterval(async () => {
+      audio.volume = Math.max(audio.volume - step, 0);
+      if (audio.volume <= 0.001) {
+        clearInterval(fade);
+        audio.pause();
+        audio.currentTime = INTRO_SKIP;
+        played = 0;
+        lastTs = audio.currentTime;
+        fading = false;
+        await audio.play();
+        fadeIn();
+      }
+    }, 100);
+  }
+
+  // Acumula el tiempo realmente reproducido y dispara el corte a los 2 min
+  audio.addEventListener('timeupdate', () => {
+    if (ended || audio.paused) { lastTs = audio.currentTime; return; }
+    const delta = audio.currentTime - lastTs;
+    // delta negativo = el loop reinició; en ese caso solo sumamos el tramo válido
+    if (delta > 0 && delta < 1) played += delta;
+    lastTs = audio.currentTime;
+
+    if (played >= MAX_PLAY - FADE_OUT) fadeOutAndRestart();
+  });
+
   async function startMusic() {
     if (started) return;
     started = true;
     try {
+      audio.currentTime = INTRO_SKIP;
       await audio.play();
       fadeIn();
       setPlayingState(true);
