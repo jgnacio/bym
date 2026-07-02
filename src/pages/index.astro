@@ -35,7 +35,7 @@ const FINAL_PHOTO      = '/IMG_4713.webp';
     <EventSection
       photoSrc={EVENT_PHOTO}
       monthLabel="Septiembre 2026"
-      dateDescription="Viernes 11/09/26 Registro Civil de Pando<br/>Sábado 12/09/26 Ceremonia en Monte Beraca - Ruta 8 km 21.000"
+      dateDescription="<span class='font-semibold text-primary'>Viernes 11/09/26</span> · Registro Civil de Pando <span class='italic text-primary/60'>(hora a confirmar)</span><br/><span class='font-semibold text-primary'>Sábado 12/09/26</span> · Ceremonia en Monte Beraca <span class='italic text-primary/60'>(12hs a 16hs)</span>"
       highlightedDay={12}
       monthStartOffset={2}
       totalDays={30}
@@ -45,19 +45,22 @@ const FINAL_PHOTO      = '/IMG_4713.webp';
       venues={[
         {
           name: 'Registro Civil de Pando',
-          detail: 'Viernes 11/09/26',
+          detail: 'Viernes 11/09/26 - Hora a confirmar',
           mapsUrl: 'https://maps.app.goo.gl/5CJ57NFbQKTxwvqG6',
         },
         {
           name: 'Ceremonia en Monte Beraca',
-          detail: 'Sábado 12/09/26 - Ruta 8 km 21.000',
+          detail: 'Sábado 12/09/26 - de 12hs a 16hs',
           mapsUrl: 'https://maps.app.goo.gl/prccKzxecTQXLJmD6',
         },
       ]}
     />
 
     <RSVPSection
-      phones={['097 730 153', '097 554 025']}
+      contacts={[
+        { name: 'Barbi', phone: '097 730 153' },
+        { name: 'Mauro', phone: '097 554 025' },
+      ]}
     />
 
     <MasonryGallery
@@ -71,7 +74,21 @@ const FINAL_PHOTO      = '/IMG_4713.webp';
       ]}
     />
 
-    <div class="w-full flex justify-center pb-10 px-4">
+    <div class="w-full flex flex-col items-center gap-3 pb-10 px-4">
+      <img
+        src="/gift-photos-qr.webp"
+        alt="Código QR para subir fotos al álbum"
+        width="240"
+        height="240"
+        class="w-60 h-60 rounded-xl shadow-sm"
+        loading="lazy"
+      />
+      <p
+        class="text-center text-sm text-[#556345]/80"
+        style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em;"
+      >
+        Escaneá el QR o tocá el botón para subir tus fotos
+      </p>
       <a
         href="https://photos.app.goo.gl/PuEZrsnVHQJSFM4v9"
         target="_blank"
@@ -84,13 +101,16 @@ const FINAL_PHOTO      = '/IMG_4713.webp';
           <circle cx="8.5" cy="8.5" r="1.5"/>
           <polyline points="21 15 16 10 5 21"/>
         </svg>
-        Ver álbum de fotos
+        Subir fotos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 21s-6.7-4.35-9.33-8.2C1.02 10.5 1.6 7.28 4.2 5.6c2.1-1.36 4.6-.83 6.1.97L12 8.3l1.7-1.73c1.5-1.8 4-2.33 6.1-.97 2.6 1.68 3.18 4.9 1.53 7.2C18.7 16.65 12 21 12 21z"/>
+        </svg>
       </a>
     </div>
 
     <GiftsSection giftUrl="https://forms.gle/oR7NbJJk5jPSnyFe9" />
 
-    <CountdownSection targetDate="2026-09-12T18:00:00-03:00" />
+    <CountdownSection targetDate="2026-09-12T12:00:00-03:00" />
 
     <section class="w-full pb-8 px-4 md:px-6">
       <div class="relative w-full h-[50vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-md">
