@@ -1,0 +1,363 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Regalos - Mauro & Barbi">
+  <main class="flex-grow flex flex-col items-center w-full max-w-md md:max-w-2xl mx-auto px-6 py-10 md:py-16">
+    <a
+      href="/"
+      class="self-start mb-6 inline-flex items-center gap-1 text-primary/70 font-body-md text-sm hover:text-primary transition-colors"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver al inicio
+    </a>
+
+    <span class="material-symbols-outlined text-tertiary text-4xl mb-2">card_giftcard</span>
+    <h1 class="font-headline-md text-2xl md:text-3xl text-primary mb-2 text-center">Lista de regalos</h1>
+    <p class="font-body-md text-on-surface-variant text-center mb-8 max-w-md">
+      Elegí algo con lo que quieras acompañarnos. Cada regalo solo puede reservarse una vez, así que lo que ves disponible acá está disponible de verdad.
+    </p>
+
+    <div id="wizard-root" class="w-full"></div>
+  </main>
+</Layout>
+
+<script>
+  import { supabase, type GiftCategory, type GiftItem } from '../lib/supabase';
+
+  type Selection =
+    | { kind: 'item'; item: GiftItem }
+    | { kind: 'custom'; name: string };
+
+  const root = document.getElementById('wizard-root')!;
+
+  const state: {
+    step: 1 | 2 | 3 | 'custom' | 'done';
+    categories: GiftCategory[];
+    selectedCategory: GiftCategory | null;
+    items: GiftItem[];
+    selection: Selection | null;
+    error: string | null;
+  } = {
+    step: 1,
+    categories: [],
+    selectedCategory: null,
+    items: [],
+    selection: null,
+    error: null,
+  };
+
+  function escapeHtml(value: string) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderLoading() {
+    root.innerHTML = `
+      <div class="flex justify-center py-16">
+        <span class="material-symbols-outlined text-primary/40 text-3xl animate-spin">progress_activity</span>
+      </div>
+    `;
+  }
+
+  function renderStep1() {
+    const categoryCards = state.categories
+      .map(
+        (cat) => `
+        <button
+          type="button"
+          data-action="pick-category"
+          data-id="${cat.id}"
+          class="flex flex-col items-center gap-2 p-5 rounded-2xl border border-primary/20 bg-surface hover:bg-primary/5 hover:border-primary transition-colors text-center"
+        >
+          <span class="material-symbols-outlined text-primary text-3xl">${escapeHtml(cat.icon)}</span>
+          <span class="font-body-md text-sm text-on-surface">${escapeHtml(cat.name)}</span>
+        </button>
+      `,
+      )
+      .join('');
+
+    root.innerHTML = `
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+        ${categoryCards}
+      </div>
+      <button
+        type="button"
+        data-action="go-custom"
+        class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-dashed border-primary/40 text-primary/80 font-body-md text-sm hover:bg-primary/5 transition-colors"
+      >
+        <span class="material-symbols-outlined text-lg">add_circle</span>
+        No encuentro lo que busco, quiero regalar otra cosa
+      </button>
+    `;
+
+    root.querySelectorAll<HTMLButtonElement>('[data-action="pick-category"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = state.categories.find((c) => c.id === btn.dataset.id) ?? null;
+        state.selectedCategory = cat;
+        state.step = 2;
+        loadItems();
+      });
+    });
+
+    root.querySelector('[data-action="go-custom"]')?.addEventListener('click', () => {
+      state.step = 'custom';
+      renderCustomStep();
+    });
+  }
+
+  function renderStep2() {
+    const itemCards = state.items
+      .map((item) => {
+        const disabled = item.is_reserved;
+        return `
+          <button
+            type="button"
+            data-action="pick-item"
+            data-id="${item.id}"
+            ${disabled ? 'disabled' : ''}
+            class="flex items-center justify-between gap-2 px-5 py-4 rounded-2xl border text-left transition-colors ${
+              disabled
+                ? 'border-outline-variant bg-surface-container-low text-on-surface-variant/50 cursor-not-allowed'
+                : 'border-primary/20 bg-surface hover:bg-primary/5 hover:border-primary text-on-surface'
+            }"
+          >
+            <span class="font-body-md text-sm">${escapeHtml(item.name)}</span>
+            ${
+              disabled
+                ? `<span class="font-label-caps text-[10px] uppercase tracking-wide text-on-surface-variant/60 shrink-0">Reservado por ${escapeHtml(item.reserved_by ?? 'alguien')}</span>`
+                : ''
+            }
+          </button>
+        `;
+      })
+      .join('');
+
+    root.innerHTML = `
+      <button type="button" data-action="back" class="mb-5 inline-flex items-center gap-1 text-primary/70 font-body-md text-sm hover:text-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Cambiar categoría
+      </button>
+      <h2 class="font-headline-md text-xl text-primary mb-4">${escapeHtml(state.selectedCategory?.name ?? '')}</h2>
+      <div class="flex flex-col gap-2 mb-6">
+        ${itemCards}
+      </div>
+    `;
+
+    root.querySelector('[data-action="back"]')?.addEventListener('click', () => {
+      state.step = 1;
+      renderStep1();
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-action="pick-item"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const item = state.items.find((i) => i.id === btn.dataset.id);
+        if (!item) return;
+        state.selection = { kind: 'item', item };
+        state.step = 3;
+        renderStep3();
+      });
+    });
+  }
+
+  function renderCustomStep() {
+    root.innerHTML = `
+      <button type="button" data-action="back" class="mb-5 inline-flex items-center gap-1 text-primary/70 font-body-md text-sm hover:text-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Volver
+      </button>
+      <h2 class="font-headline-md text-xl text-primary mb-4">Contanos qué querés regalarnos</h2>
+      <input
+        type="text"
+        id="custom-item-input"
+        placeholder="Ej: Set de toallas"
+        class="w-full px-4 py-3 rounded-xl border border-primary/20 bg-surface font-body-md text-sm mb-4 focus:outline-none focus:border-primary"
+      />
+      <button
+        type="button"
+        data-action="confirm-custom"
+        class="w-full px-6 py-3 rounded-full bg-primary text-on-primary font-body-md text-sm hover:opacity-90 transition-opacity"
+      >
+        Continuar
+      </button>
+    `;
+
+    root.querySelector('[data-action="back"]')?.addEventListener('click', () => {
+      state.step = 1;
+      renderStep1();
+    });
+
+    root.querySelector('[data-action="confirm-custom"]')?.addEventListener('click', () => {
+      const input = root.querySelector<HTMLInputElement>('#custom-item-input');
+      const name = input?.value.trim() ?? '';
+      if (!name) {
+        input?.focus();
+        return;
+      }
+      state.selection = { kind: 'custom', name };
+      state.step = 3;
+      renderStep3();
+    });
+  }
+
+  function renderStep3() {
+    const label =
+      state.selection?.kind === 'item' ? state.selection.item.name : state.selection?.name ?? '';
+
+    root.innerHTML = `
+      <button type="button" data-action="back" class="mb-5 inline-flex items-center gap-1 text-primary/70 font-body-md text-sm hover:text-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Elegir otro regalo
+      </button>
+      <div class="mb-6 px-5 py-4 rounded-2xl border border-primary/30 bg-surface-container-low">
+        <span class="font-label-caps text-[10px] uppercase tracking-wide text-primary/60">Vas a regalar</span>
+        <p class="font-body-md text-base text-on-surface">${escapeHtml(label)}</p>
+      </div>
+      <label class="font-body-md text-sm text-on-surface-variant mb-1 block">Tu nombre *</label>
+      <input
+        type="text"
+        id="guest-name"
+        placeholder="Nombre y apellido"
+        class="w-full px-4 py-3 rounded-xl border border-primary/20 bg-surface font-body-md text-sm mb-4 focus:outline-none focus:border-primary"
+      />
+      <label class="font-body-md text-sm text-on-surface-variant mb-1 block">WhatsApp (opcional)</label>
+      <input
+        type="tel"
+        id="guest-phone"
+        placeholder="099 123 456"
+        class="w-full px-4 py-3 rounded-xl border border-primary/20 bg-surface font-body-md text-sm mb-2 focus:outline-none focus:border-primary"
+      />
+      ${state.error ? `<p class="text-error font-body-md text-sm mb-2">${escapeHtml(state.error)}</p>` : ''}
+      <button
+        type="button"
+        data-action="submit"
+        class="w-full mt-3 px-6 py-3 rounded-full bg-primary text-on-primary font-body-md text-sm hover:opacity-90 transition-opacity"
+      >
+        Confirmar regalo
+      </button>
+    `;
+
+    root.querySelector('[data-action="back"]')?.addEventListener('click', () => {
+      state.error = null;
+      if (state.selection?.kind === 'item') {
+        state.step = 2;
+        loadItems();
+      } else {
+        state.step = 'custom';
+        renderCustomStep();
+      }
+    });
+
+    root.querySelector('[data-action="submit"]')?.addEventListener('click', submitReservation);
+  }
+
+  function renderDone() {
+    const label =
+      state.selection?.kind === 'item' ? state.selection.item.name : state.selection?.name ?? '';
+
+    root.innerHTML = `
+      <div class="flex flex-col items-center text-center py-8">
+        <span class="material-symbols-outlined text-primary text-5xl mb-3">favorite</span>
+        <h2 class="font-headline-md text-xl text-primary mb-2">¡Gracias!</h2>
+        <p class="font-body-md text-on-surface-variant max-w-sm">
+          Quedó reservado <strong>${escapeHtml(label)}</strong>. Significa muchísimo para nosotros, de verdad.
+        </p>
+        <a
+          href="/"
+          class="mt-6 inline-flex items-center gap-2 px-7 py-3 rounded-full border border-primary text-primary font-body-md text-sm hover:bg-primary hover:text-on-primary transition-colors"
+        >
+          Volver al inicio
+        </a>
+      </div>
+    `;
+  }
+
+  async function loadCategories() {
+    renderLoading();
+    const { data, error } = await supabase
+      .from('gift_categories')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      root.innerHTML = `<p class="text-error font-body-md text-sm text-center py-10">No pudimos cargar la lista de regalos. Probá de nuevo en un rato.</p>`;
+      return;
+    }
+
+    state.categories = data ?? [];
+    renderStep1();
+  }
+
+  async function loadItems() {
+    if (!state.selectedCategory) return;
+    renderLoading();
+
+    const { data, error } = await supabase
+      .from('gift_items_availability')
+      .select('*')
+      .eq('category_id', state.selectedCategory.id)
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      root.innerHTML = `<p class="text-error font-body-md text-sm text-center py-10">No pudimos cargar los regalos de esta categoría.</p>`;
+      return;
+    }
+
+    state.items = data ?? [];
+    renderStep2();
+  }
+
+  async function submitReservation() {
+    const nameInput = root.querySelector<HTMLInputElement>('#guest-name');
+    const phoneInput = root.querySelector<HTMLInputElement>('#guest-phone');
+    const guestName = nameInput?.value.trim() ?? '';
+    const guestPhone = phoneInput?.value.trim() || null;
+
+    if (!guestName) {
+      state.error = 'Contanos tu nombre para poder agradecerte.';
+      renderStep3();
+      return;
+    }
+
+    const submitBtn = root.querySelector<HTMLButtonElement>('[data-action="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+    }
+
+    const payload =
+      state.selection?.kind === 'item'
+        ? { item_id: state.selection.item.id, guest_name: guestName, guest_phone: guestPhone }
+        : { custom_item_name: state.selection?.name, guest_name: guestName, guest_phone: guestPhone };
+
+    const { error } = await supabase.from('gift_reservations').insert(payload);
+
+    if (error) {
+      if (error.code === '23505') {
+        state.error = 'Uy, justo alguien más reservó este regalo. Elegí otro de la lista.';
+        state.selection = null;
+        if (state.selectedCategory) {
+          state.step = 2;
+          await loadItems();
+        } else {
+          state.step = 1;
+          renderStep1();
+        }
+        return;
+      }
+      state.error = 'Algo falló al guardar tu reserva. Probá de nuevo.';
+      renderStep3();
+      return;
+    }
+
+    state.step = 'done';
+    renderDone();
+  }
+
+  loadCategories();
+</script>
