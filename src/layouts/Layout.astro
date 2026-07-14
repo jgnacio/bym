@@ -4,9 +4,10 @@ import MusicPlayer from '../components/MusicPlayer.astro';
 
 interface Props {
   title?: string;
+  showSplash?: boolean;
 }
 
-const { title = 'Mauro & Barbi - Wedding Invitation' } = Astro.props;
+const { title = 'Mauro & Barbi - Wedding Invitation', showSplash = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -48,7 +49,7 @@ const { title = 'Mauro & Barbi - Wedding Invitation' } = Astro.props;
     />
   </head>
   <body class="bg-surface text-on-surface antialiased font-body-md overflow-x-hidden min-h-screen flex flex-col">
-    <SplashScreen />
+    {showSplash && <SplashScreen />}
     <slot />
     <MusicPlayer src="/wedding-mix.mp3" />
   </body>
