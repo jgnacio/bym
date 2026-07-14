@@ -17,11 +17,47 @@ import Layout from '../layouts/Layout.astro';
     <span class="material-symbols-outlined text-tertiary text-4xl mb-2">checklist</span>
     <h1 class="font-headline-md text-2xl md:text-3xl text-primary mb-2 text-center">Estado de los regalos</h1>
     <p class="font-body-md text-on-surface-variant text-center mb-8 max-w-md">
-      Quién ya nos regaló qué. Tocá el WhatsApp para agradecerle.
+      Quién ya nos regaló qué. Tocá un nombre para ver los detalles.
     </p>
 
     <div id="overview-root" class="w-full"></div>
   </main>
+
+  <div
+    id="guest-modal"
+    class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 px-6"
+  >
+    <div class="w-full max-w-sm bg-surface rounded-2xl p-6 shadow-lg">
+      <span class="font-label-caps text-[10px] uppercase tracking-wide text-primary/60" id="guest-modal-gift"></span>
+      <h2 class="font-headline-md text-lg text-primary mb-1" id="guest-modal-name"></h2>
+      <p class="font-body-md text-sm text-on-surface-variant mb-6" id="guest-modal-phone"></p>
+
+      <div class="flex flex-col gap-2">
+        <a
+          id="guest-modal-whatsapp"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full text-center px-4 py-2.5 rounded-full bg-primary text-on-primary font-body-md text-sm hover:opacity-90 transition-opacity"
+        >
+          Enviar mensaje
+        </a>
+        <button
+          type="button"
+          id="guest-modal-delete"
+          class="w-full px-4 py-2.5 rounded-full border border-error text-error font-body-md text-sm hover:bg-error/5 transition-colors"
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          id="guest-modal-close"
+          class="w-full px-4 py-2.5 rounded-full text-on-surface-variant font-body-md text-sm hover:text-on-surface transition-colors"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
 </Layout>
 
 <script>
@@ -51,22 +87,18 @@ import Layout from '../layouts/Layout.astro';
     `;
   }
 
-  function reservedByMarkup(name: string | null, phone: string | null, giftName: string) {
-    if (!name) return '<span class="font-body-md text-xs text-primary">Reservado</span>';
-    if (!phone) return `<span class="font-body-md text-xs text-primary">${escapeHtml(name)}</span>`;
+  function reservedBadge(reservationId: string, name: string, giftName: string) {
     return `
-      <a
-        href="${whatsAppLink(phone, giftName)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1 font-body-md text-xs text-primary hover:underline"
+      <button
+        type="button"
+        data-action="show-guest"
+        data-reservation-id="${reservationId}"
+        data-name="${escapeHtml(name)}"
+        data-gift="${escapeHtml(giftName)}"
+        class="font-body-md text-xs text-primary hover:underline"
       >
         ${escapeHtml(name)}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.528 5.855L0 24l6.326-1.51A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.36-.213-3.754.896.948-3.651-.234-.374A9.818 9.818 0 1112 21.818z"/>
-        </svg>
-      </a>
+      </button>
     `;
   }
 
@@ -93,8 +125,8 @@ import Layout from '../layouts/Layout.astro';
                 <li class="flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl bg-surface-container-low">
                   <span class="font-body-md text-sm text-on-surface">${escapeHtml(item.name)}</span>
                   ${
-                    item.is_reserved
-                      ? reservedByMarkup(item.reserved_by, item.reserved_phone, item.name)
+                    item.is_reserved && item.reservation_id
+                      ? reservedBadge(item.reservation_id, item.reserved_by ?? 'Reservado', item.name)
                       : '<span class="font-body-md text-xs text-on-surface-variant/50">Disponible</span>'
                   }
                 </li>
@@ -117,7 +149,7 @@ import Layout from '../layouts/Layout.astro';
                 (c) => `
                 <li class="flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl bg-surface-container-low">
                   <span class="font-body-md text-sm text-on-surface">${escapeHtml(c.custom_item_name)}</span>
-                  ${reservedByMarkup(c.guest_name, c.guest_phone, c.custom_item_name)}
+                  ${reservedBadge(c.id, c.guest_name, c.custom_item_name)}
                 </li>
               `,
               )
@@ -132,6 +164,18 @@ import Layout from '../layouts/Layout.astro';
       ${categoryBlocks}
       ${customBlock}
     `;
+  }
+
+  const guestReservationPhones = new Map<string, string | null>();
+
+  function indexPhones(items: GiftItem[], customReservations: CustomReservation[]) {
+    guestReservationPhones.clear();
+    for (const item of items) {
+      if (item.reservation_id) guestReservationPhones.set(item.reservation_id, item.reserved_phone);
+    }
+    for (const c of customReservations) {
+      guestReservationPhones.set(c.id, c.guest_phone);
+    }
   }
 
   async function load() {
@@ -151,8 +195,69 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
-    render(categoriesRes.data ?? [], itemsRes.data ?? [], customRes.data ?? []);
+    const items = itemsRes.data ?? [];
+    const customReservations = customRes.data ?? [];
+    indexPhones(items, customReservations);
+    render(categoriesRes.data ?? [], items, customReservations);
   }
+
+  const modal = document.getElementById('guest-modal')!;
+  const modalGift = document.getElementById('guest-modal-gift')!;
+  const modalName = document.getElementById('guest-modal-name')!;
+  const modalPhone = document.getElementById('guest-modal-phone')!;
+  const modalWhatsapp = document.getElementById('guest-modal-whatsapp')! as HTMLAnchorElement;
+  const modalDelete = document.getElementById('guest-modal-delete')! as HTMLButtonElement;
+  const modalClose = document.getElementById('guest-modal-close')!;
+
+  let pendingReservationId: string | null = null;
+
+  function openGuestModal(reservationId: string, name: string, giftName: string) {
+    const phone = guestReservationPhones.get(reservationId) ?? null;
+    pendingReservationId = reservationId;
+
+    modalGift.textContent = giftName;
+    modalName.textContent = name;
+    modalPhone.textContent = phone ?? 'Sin teléfono';
+
+    if (phone) {
+      modalWhatsapp.href = whatsAppLink(phone, giftName);
+      modalWhatsapp.classList.remove('hidden');
+    } else {
+      modalWhatsapp.classList.add('hidden');
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeGuestModal() {
+    pendingReservationId = null;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  root.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-action="show-guest"]');
+    if (!btn) return;
+    openGuestModal(btn.dataset.reservationId!, btn.dataset.name ?? '', btn.dataset.gift ?? '');
+  });
+
+  modalClose.addEventListener('click', closeGuestModal);
+
+  modalDelete.addEventListener('click', async () => {
+    if (!pendingReservationId) return;
+    if (!confirm('¿Seguro que querés eliminar esta reserva?')) return;
+
+    modalDelete.disabled = true;
+    modalDelete.textContent = 'Eliminando...';
+
+    await supabase.from('gift_reservations').delete().eq('id', pendingReservationId);
+
+    modalDelete.disabled = false;
+    modalDelete.textContent = 'Eliminar';
+    closeGuestModal();
+    load();
+  });
 
   load();
 </script>

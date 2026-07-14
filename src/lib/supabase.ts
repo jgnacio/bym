@@ -20,6 +20,7 @@ export interface GiftItem {
   is_reserved: boolean;
   reserved_by: string | null;
   reserved_phone: string | null;
+  reservation_id: string | null;
 }
 
 export interface CustomReservation {
